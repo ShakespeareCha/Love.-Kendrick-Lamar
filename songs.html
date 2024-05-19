@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Love. ShMusic</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .back a {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back a:hover {
+            color: #c01616;
+        }
+
+        .audio-player {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 300px;
+            background-color: #1E1E1E;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .track-info {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .track-title {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .track-artist {
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background-color: #535353;
+            border-radius: 2px;
+            margin-bottom: 15px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #1ED760;
+            border-radius: 2px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: width 0.1s linear; /* Add smooth transition */
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px; /* Add margin to separate from timing */
+        }
+
+        .timing-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .playback-container {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center the play button */
+            width: 100%;
+            margin-top: 10px; /* Add margin to separate from timing */
+        }
+
+        button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: transform 0.2s ease-in-out;
+            border-radius: 100%;
+        }
+
+        button:hover {
+            transform: scale(1.2);
+        }
+
+        button img {
+            width: 30px;
+            height: 30px;
+        }
+
+        /* Adjust play/pause button size */
+        #playPauseBtn {
+            width: 40px;
+            height: 40px;
+        }
+
+        .image {
+            display: flex;
+            justify-content: center;
+            position: relative; /* Add position relative to position the play button */
+            margin-bottom: 20px; /* Add space between image and controls */
+        }
+
+        video {
+            width: 100%; /* Adjust the video size */
+            height: 100%; /* Adjust the video size */
+        }
+
+        .lyrics-container {
+            display: none;
+            margin-top: 20px;
+            color: #fff;
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .lyrics-content {
+            max-height: 200px; /* Set a fixed height for scrolling */
+            overflow: auto; /* Enable scrolling */
+        }
+
+        .show-lyrics {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: #1ED760;
+            margin-top: 10px;
+        }
+
+        .show-lyrics:hover {
+            color: #157537;
+        }
+
+        .download-btn {
+            margin-top: 10px;
+            background-color: #2632d9;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            align-self: flex-end;
+        }
+
+        .download-btn:hover {
+            background-color: #1d51b1;
+        }
+    </style>
+</head>
+<body>
+    <div class="back">
+        <a href="https://shakespearechabungbam.github.io/ShMusic/"><b>Back</b></a>
+    </div>
+    <div class="audio-player">
+        <div class="track-info">
+            <div class="track-title">Love.</div>
+            <div class="track-artist">Kendrick Lamar</div>
+        </div>
+        <div class="image">
+            <video id="videoPlayer" src="Kendrick Lamar - LOVE. ft. Zacari.mp4" alt="Album Cover"></video>
+        </div>
+        <div class="progress-bar" id="progressBar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="timing-container">
+            <div class="current-timing" id="currentTiming">0:00</div>
+            <button id="playPauseBtn"><img src="play.png" alt="Play"></button>
+            <div class="full-timing" id="fullTiming">0:00</div>
+        </div>
+        <button class="show-lyrics" id="toggleLyricsBtn">Show Lyrics</button>
+        <div class="lyrics-container" id="lyricsContainer">
+            <div class="lyrics-content">
+                <!-- Your lyrics content goes here -->
+                <br>
+                Damn<br>
+                Love or lust<br>
+                Damn<br>
+                All of us<br>
+                Give me a run for my money<br>
+                There is nobody, no one to outrun me<br>
+                (Another world premiere)<br>
+                So give me a run for my money<br>
+                Sippin' bubbly, feelin' lovely<br>
+                Livin' lovely<br>
+                Just love me<br>
+                I wanna be with you, ayy (just love me)<br>
+                I wanna be with (just love me, just love)<br>
+                I wanna be with you, ayy (love me), I wanna be with<br>
+                I wanna be with you (love me, just love me)<br>
+                If I didn't ride blade on curb, would you still (love me)?<br>
+                If I made up my mind at work, would you still (love me)?<br>
+                Keep it a hundred, I'd rather you trust me than to (love me)<br>
+                Keep it a whole one hund', don't got you I got nothin', ayy<br>
+                I got somethin' (I got somethin'), ayy<br>
+                Hol' up, we gon' function (we gon' function), ayy<br>
+                No assumptions (no assumptions), ayy<br>
+                Feelin' like Tyson wit' it (feelin' like Tyson wit' it)<br>
+                Knock it out twice, I'm wit' it (knock it out twice, I'm wit' it)<br>
+                Only for the night, I'm kiddin' (only for the night, I'm kiddin')<br>
+                Only for life, yeah<br>
+                Only for life, yeah, only for life, let's get it<br>
+                Hit that shoulder lean<br>
+                I know what comin' over me<br>
+                Backstroke oversea<br>
+                I know what you need<br>
+                Already on ten, all money come in<br>
+                All feelin' go out, this feelin' don't drought<br>
+                This party won't end (love me, love me)<br>
+                If I didn't ride blade on curb, would you still (love me)?<br>
+                If I made up my mind at work, would you still (love me)?<br>
+                Keep it a hundred, I'd rather you trust me than to (love me)<br>
+                Keep it a whole one hund', don't got you I got nothin' (oh, oh)<br>
+                Give me a run for my money<br>
+                There is nobody, no one to outrun me<br>
+                So give me a run for my money<br>
+                Sippin' bubbly, feelin' lovely<br>
+                Livin' lovely<br>
+                Just love me<br>
+                I wanna be with you, ayy (just love me)<br>
+                I wanna be with (just love me, just love)<br>
+                I wanna be with you, ayy (love me), I wanna be with<br>
+                I wanna be with you (love me, just love me)<br>
+                I'm on the way<br>
+                We ain't got no time to waste<br>
+                Poppin' your gum on the way (love me)<br>
+                Am I in the way?<br>
+                I don't want pressure you none<br>
+                I want your blessin' today (love me)<br>
+                Oh, by the way, open the door by the way<br>
+                Told you that I'm on the way (love me)<br>
+                I'm on the way, I know connection is vague<br>
+                Pick up the phone for me, babe (love me)<br>
+                Dammit, we jammin'<br>
+                Bad attitude from your nanny<br>
+                Curves and your hips from yo' mammy<br>
+                Remember Gardena? I took the studio camera<br>
+                I know Top will be mad at me<br>
+                I had to do it, I want your body, your music<br>
+                I bought the big one to prove it<br>
+                Look what you made<br>
+                Told you that I'm on the way<br>
+                I'm like an exit away, yep<br>
+                If I didn't ride blade on curb, would you still (love me)?<br>
+                If I made up my mind at work, would you still (love me)?<br>
+                Keep it a hundred, I'd rather you trust me than to (love me)<br>
+                Keep it a whole one hund', don't got you I got nothin' (oh, oh)<br>
+                Give me a run for my money<br>
+                There is nobody, no one to outrun me<br>
+                So give me a run for my money<br>
+                Sippin' bubbly, feelin' lovely<br>
+                Livin' lovely<br>
+                Just love me<br>
+                I wanna be with you, ayy (just love me)<br>
+                I wanna be with (just love me, just love)<br>
+                I wanna be with you, ayy (love me), I wanna be with<br>
+                I wanna be with you (love me, just love me)<br>
+                <br>
+            </div>
+        </div>        
+        <button class="download-btn" id="downloadBtn">Download</button>
+    </div>
+
+    <script>
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const toggleLyricsBtn = document.getElementById('toggleLyricsBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const videoPlayer = document.getElementById('videoPlayer');
+        
+        let isPlaying = false;
+        let isDragging = false;
+        let animationFrameId; // Variable to hold the animation frame ID
+        const progressBar = document.getElementById('progressBar');
+        const progress = document.getElementById('progress');
+        const currentTiming = document.getElementById('currentTiming');
+        const fullTiming = document.getElementById('fullTiming');
+        const lyricsContainer = document.getElementById('lyricsContainer');
+
+        playPauseBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                videoPlayer.pause();
+                isPlaying = false;
+                playPauseBtn.innerHTML = '<img src="play.png" alt="Play">';
+                cancelAnimationFrame(animationFrameId); // Stop updating progress when paused
+            } else {
+                videoPlayer.play();
+                isPlaying = true;
+                playPauseBtn.innerHTML = '<img src="pause.png" alt="Pause">';
+                requestAnimationFrame(updateProgress); // Start updating progress
+            }
+        });
+
+        toggleLyricsBtn.addEventListener('click', () => {
+            if (lyricsContainer.style.display === 'none' || lyricsContainer.style.display === '') {
+                lyricsContainer.style.display = 'block';
+                toggleLyricsBtn.textContent = 'Hide Lyrics';
+            } else {
+                lyricsContainer.style.display = 'none';
+                toggleLyricsBtn.textContent = 'Show Lyrics';
+            }
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            const a = document.createElement('a');
+            a.href = videoPlayer.src;
+            a.download = videoPlayer.src;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+
+        progressBar.addEventListener('click', (e) => {
+            const width = progressBar.clientWidth;
+            const clickX = e.offsetX;
+            const duration = videoPlayer.duration;
+            videoPlayer.currentTime = (clickX / width) * duration;
+        });
+
+        videoPlayer.addEventListener('timeupdate', () => {
+            if (!isDragging) {
+                const currentTime = videoPlayer.currentTime;
+                const duration = videoPlayer.duration;
+                const progressWidth = (currentTime / duration) * 100 + '%';
+                progress.style.width = progressWidth;
+                currentTiming.textContent = formatTime(currentTime);
+            }
+        });
+
+        videoPlayer.addEventListener('loadedmetadata', () => {
+            const duration = videoPlayer.duration;
+            fullTiming.textContent = formatTime(duration);
+        });
+
+        videoPlayer.addEventListener('ended', () => {
+            isPlaying = false;
+            playPauseBtn.innerHTML = '<img src="play.png" alt="Play">';
+            cancelAnimationFrame(animationFrameId); // Stop updating progress when ended
+        });
+
+        progress.addEventListener('mousedown', () => {
+            isDragging = true;
+        });
+
+        progress.addEventListener('mouseup', (e) => {
+            const width = progressBar.clientWidth;
+            const clickX = e.offsetX;
+            const duration = videoPlayer.duration;
+            videoPlayer.currentTime = (clickX / width) * duration;
+            isDragging = false;
+        });
+
+        function updateProgress() {
+            const currentTime = videoPlayer.currentTime;
+            const duration = videoPlayer.duration;
+            const progressWidth = (currentTime / duration) * 100 + '%';
+            progress.style.width = progressWidth;
+            currentTiming.textContent = formatTime(currentTime);
+            animationFrameId = requestAnimationFrame(updateProgress); // Schedule next update
+        }
+
+        function formatTime(seconds) {
+            let min = Math.floor(seconds / 60);
+            let sec = Math.floor(seconds % 60);
+            sec = sec < 10 ? '0' + sec : sec;
+            return min + ':' + sec;
+        }
+    </script>
+</body>
+</html>
